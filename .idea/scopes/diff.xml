@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="diff" pattern="file[IDEx.ide.text.commonMain]:kotlin/com/idex/text/diff//*||file[IDEx.ide.diff.commonMain]:kotlin/com/idex/diff//*" />
+</component>
