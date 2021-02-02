@@ -1,21 +1,20 @@
 package com.lhwdev.build
 
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.kotlin.dsl.invoke
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinWithJavaTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 
-fun KotlinMultiplatformExtension.dependencies(name: String = "commonMain", block: KotlinDependencyHandler.() -> Unit) {
-	sourceSets {
-		named(name) {
-			dependencies(block)
-		}
-	}
-}
+// all common
 
 fun KotlinProjectExtension.setupCommon() {
 	sourceSets {
@@ -28,10 +27,8 @@ fun KotlinProjectExtension.setupCommon() {
 			}
 		}
 		
-		val testSourceSet = when(this@setupCommon) {
-			is KotlinMultiplatformExtension -> "commonTest"
-			else -> "test"
-		}
+		val testSourceSet = if(this@setupCommon is KotlinMultiplatformExtension) "commonTest" else "test"
+		
 		named(testSourceSet) {
 			dependencies {
 				implementation(kotlin("test-common"))
@@ -41,30 +38,12 @@ fun KotlinProjectExtension.setupCommon() {
 	}
 }
 
-fun KotlinMultiplatformExtension.setupJvm(name: String = "jvm", configure: (KotlinJvmTarget.() -> Unit)? = null) {
-	jvm(name) {
-		compilations.all {
-			kotlinOptions.jvmTarget = "1.8"
-		}
-		
-		configure?.invoke(this)
-	}
-	
-	setupJvmCommon(name)
-}
 
-fun KotlinJvmProjectExtension.setup() {
-	setupCommon()
-	setupJvmCommon(null)
-	
-	target.compilations.all {
-		kotlinOptions.jvmTarget = "1.8"
-	}
-}
+// jvm
 
 private fun KotlinProjectExtension.setupJvmCommon(name: String?) {
 	sourceSets {
-		named(if(name == null) "test" else "${name}Test") {
+		named(sourceSetNameFor(name, "test")) {
 			dependencies {
 				implementation(kotlin("test-junit"))
 			}
@@ -72,22 +51,30 @@ private fun KotlinProjectExtension.setupJvmCommon(name: String?) {
 	}
 }
 
-fun KotlinMultiplatformExtension.setupJs(name: String = "js", configure: (KotlinJsTargetDsl.() -> Unit)? = null) {
-	js(name) {
-		configure?.invoke(this)
+fun KotlinJvmProjectExtension.setup(init: (KotlinSetup<KotlinWithJavaTarget<KotlinJvmOptions>>.() -> Unit)? = null) {
+	setupCommon()
+	setupJvmCommon(null)
+	
+	target.compilations.all {
+		kotlinOptions.jvmTarget = "1.8"
 	}
 	
+	init?.invoke(KotlinSetup(target, null, sourceSets))
+}
+
+
+// mpp
+
+fun KotlinMultiplatformExtension.dependencies(name: String = "commonMain", block: KotlinDependencyHandler.() -> Unit) {
 	sourceSets {
-		named("${name}Test") {
-			dependencies {
-				implementation(kotlin("test-js"))
-			}
+		named(name) {
+			dependencies(block)
 		}
 	}
 }
 
-
 fun KotlinMultiplatformExtension.idexLibrary() {
+	setupCommon()
 	setupJvm()
 	// js {
 	// 	browser()
@@ -102,4 +89,69 @@ fun KotlinMultiplatformExtension.idexLibrary() {
 	// 	isMingwX64 -> mingwX64("native")
 	// 	else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
 	// }
+}
+
+fun KotlinMultiplatformExtension.setupJvm(
+	name: String = "jvm",
+	init: (KotlinSetup<KotlinJvmTarget>.() -> Unit)? = null
+): KotlinJvmTarget {
+	val target = jvm(name) {
+		compilations.all {
+			kotlinOptions.jvmTarget = "1.8"
+		}
+	}
+	
+	setupJvmCommon(name)
+	init?.invoke(KotlinSetup(target, name, sourceSets))
+	return target
+}
+
+fun KotlinMultiplatformExtension.setupJs(
+	name: String = "js",
+	init: (KotlinSetup<KotlinJsTargetDsl>.() -> Unit)? = null
+): KotlinJsTargetDsl {
+	val target = js(name)
+	
+	sourceSets {
+		named("${name}Test") {
+			dependencies {
+				implementation(kotlin("test-js"))
+			}
+		}
+	}
+	
+	init?.invoke(KotlinSetup(target, name, sourceSets))
+	return target
+}
+
+
+
+private fun String.firstToUpperCase() = replaceRange(0, 1, first().toUpperCase().toString())
+
+private fun sourceSetNameFor(name: String?, type: String) =
+	if(name == null) type else "$name${type.firstToUpperCase()}"
+
+
+class KotlinSetup<Target : KotlinTarget>(
+	val target: Target,
+	val name: String?,
+	val sourceSet: NamedDomainObjectContainer<KotlinSourceSet>
+) {
+	fun target(block: Target.() -> Unit) {
+		target.block()
+	}
+	
+	private fun dependencies(type: String, block: KotlinDependencyHandler.() -> Unit) {
+		sourceSet.named(sourceSetNameFor(name, type)) {
+			dependencies(block)
+		}
+	}
+	
+	fun dependencies(block: KotlinDependencyHandler.() -> Unit) {
+		dependencies("main", block)
+	}
+	
+	fun testDependencies(block: KotlinDependencyHandler.() -> Unit) {
+		dependencies("test", block)
+	}
 }

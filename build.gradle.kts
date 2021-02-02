@@ -1,5 +1,5 @@
 buildscript {
-	val composeVersion = "0.3.0-build135"
+	val composeVersion = "0.3.0-build141"
 	val kotlinVersion = "1.4.21"
 	
 	

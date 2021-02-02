@@ -1,11 +1,11 @@
 package com.idex.util
 
 
+@Suppress("UNNECESSARY_NOT_NULL_ASSERTION") // `b!!::class`, https://youtrack.jetbrains.com/issue/KT-37878
 inline fun <reified A : Any, B> equals(a: A, b: B, compare: (A) -> Boolean) = when {
 	a === b -> true
 	b !is A -> false
-	@Suppress("UNNECESSARY_NOT_NULL_ASSERTION") // https://youtrack.jetbrains.com/issue/KT-37878
-	a::class != b::class -> false
+	a::class != b!!::class -> false
 	else -> compare(b)
 }
 

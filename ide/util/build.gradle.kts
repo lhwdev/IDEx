@@ -1,4 +1,4 @@
-import com.lhwdev.build.idexLibrary
+import com.lhwdev.build.*
 
 plugins {
 	kotlin("multiplatform")
