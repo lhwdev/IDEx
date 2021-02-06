@@ -1,6 +1,7 @@
 package com.idex.app
 
 import androidx.compose.runtime.Composable
+import com.idex.editor.rememberCodeEditor
 
 
 val MainIdeRoute = AppRoute(AppRouteId()) {
@@ -10,5 +11,7 @@ val MainIdeRoute = AppRoute(AppRouteId()) {
 
 @Composable
 fun MainIde() {
-
+	val editor = rememberCodeEditor()
+	
+	editor()
 }

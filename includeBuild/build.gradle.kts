@@ -4,7 +4,7 @@ plugins {
 }
 
 
-group = "com.lhwdev.vrcar.include-build"
+group = "com.idex.include-build"
 version = "SNAPSHOT"
 
 repositories {
@@ -14,11 +14,10 @@ repositories {
 gradlePlugin {
 	plugins.register("common-plugin") {
 		id = "common-plugin"
-		implementationClass = "com.lhwdev.build.CommonPlugin"
+		implementationClass = "com.idex.build.CommonPlugin"
 	}
 }
 
 dependencies {
-	val kotlinVersion = "1.4.21"
-	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
 }

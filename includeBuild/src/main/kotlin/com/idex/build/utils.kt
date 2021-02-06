@@ -1,4 +1,4 @@
-package com.lhwdev.build
+package com.idex.build
 
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.kotlin.dsl.invoke

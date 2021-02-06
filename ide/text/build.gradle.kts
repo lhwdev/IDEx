@@ -1,8 +1,8 @@
-import com.lhwdev.build.*
+import com.idex.build.*
 
 plugins {
 	kotlin("multiplatform")
-	id("kotlinx-serialization")
+	kotlin("plugin.serialization")
 	
 	id("common-plugin")
 }

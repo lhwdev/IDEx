@@ -16,7 +16,6 @@ import com.idex.ui.components.Surface
 import com.idex.ui.components.Text
 import com.idex.ui.components.primarySurface
 import com.idex.ui.navigation.AmbientNavigationState
-import com.idex.ui.navigation.replaceRoute
 
 
 val SplashRoute = AppRoute(AppRouteId()) { Splash() }
@@ -39,7 +38,7 @@ fun Splash() = ComposableWindow(WindowInfo("IDEx")) {
 		context.idexInit()
 		
 		// complete
-		navigation.replaceRoute(MainIdeRoute)
+		// navigation.replaceRoute(MainIdeRoute)
 	}
 	
 	Surface(

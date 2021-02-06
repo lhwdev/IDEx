@@ -1,5 +1,4 @@
-import com.lhwdev.build.*
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import com.idex.build.*
 
 plugins {
 	kotlin("multiplatform")
@@ -21,20 +20,9 @@ kotlin {
 		implementation(project(":ide:ui-util"))
 		implementation(project(":ide:ui-navigation"))
 		implementation(project(":ide:ui-style"))
+		implementation(project(":ide:ui-editor"))
 		
 		implementation(compose.runtime)
 		implementation(compose.foundation)
-	}
-}
-
-
-compose.desktop {
-	application {
-		mainClass = "com.idex.app.DesktopMainKt"
-		
-		nativeDistributions {
-			targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
-			packageName = "IDEx"
-		}
 	}
 }
