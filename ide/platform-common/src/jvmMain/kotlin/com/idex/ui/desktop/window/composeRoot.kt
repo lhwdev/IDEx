@@ -1,4 +1,4 @@
-package com.idex.ui
+package com.idex.ui.desktop.window
 
 import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.WindowEvents
@@ -6,11 +6,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.window.MenuBar
 import com.idex.ui.util.isChanged
 import java.awt.image.BufferedImage
+import kotlin.coroutines.coroutineContext
 
 
 @OptIn(ExperimentalComposeApi::class)
-fun composeRoot(parent: CompositionReference? = null, content: @Composable () -> Unit): Composition {
-	val composition = compositionFor(Any(), EmptyApplier, parent ?: Recomposer.current())
+suspend fun composeRoot(parent: CompositionContext? = null, content: @Composable () -> Unit): Composition {
+	val composition = Composition(EmptyApplier, parent ?: Recomposer(coroutineContext))
 	composition.setContent(content)
 	return composition
 }
@@ -40,14 +41,35 @@ actual fun ComposableWindowInternal(
 	initWindow: ((AppWindow) -> Unit)?,
 	content: @Composable () -> Unit
 ) {
-	val window = remember {
+	val platformDecoration = LocalWindowDecoration.current
+	
+	lateinit var window: AppWindow
+	
+	fun wrapEvents() = WindowEvents(
+		onOpen = {
+			platformDecoration?.onInit?.invoke(window)
+			events.onOpen?.invoke()
+		},
+		onClose = events.onClose,
+		onMinimize = events.onMinimize,
+		onMaximize = events.onMaximize,
+		onRestore = events.onRestore,
+		onFocusGet = events.onFocusGet,
+		onFocusLost = events.onFocusLost,
+		onResize = events.onResize,
+		onRelocate = events.onRelocate
+	)
+	
+	window = remember {
 		AppWindow(
 			info.title,
 			info.size, info.location, info.centered,
 			info.icon, info.menuBar,
-			undecorated, resizable, events, onDismissRequest
-		).also { initWindow?.invoke(it) }
+			undecorated, resizable, wrapEvents(), onDismissRequest
+		)
 	}
+	
+	remember { initWindow?.invoke(window) } // need to remember the result of initWindow(): or it will be GCed
 	
 	val w = window.window
 	
@@ -67,15 +89,18 @@ actual fun ComposableWindowInternal(
 	
 	if(window.icon != info.icon) window.setIcon(info.icon)
 	
-	remember(info.menuBar) {
-		if(info.menuBar == null) window.removeMenuBar() else window.setMenuBar(info.menuBar)
+	val menuBar = info.menuBar
+	remember(menuBar) {
+		if(menuBar == null) window.removeMenuBar() else window.setMenuBar(menuBar)
 	}
 	
 	
-	val compositionReference = rememberCompositionReference()
+	val compositionContext = rememberCompositionContext()
 	
 	DisposableEffect(null) {
-		window.show(compositionReference) { content() }
+		window.show(compositionContext) {
+			content()
+		}
 		onDispose { window.close() }
 	}
 }

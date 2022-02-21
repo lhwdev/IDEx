@@ -15,5 +15,8 @@ interface User32Ex : User32 {
 	
 	companion object {
 		const val GWLP_WNDPROC = -4
+		
+		const val WM_NCCALCSIZE = 0x0083
+		const val WM_NCHITTEST = 0x0084
 	}
 }

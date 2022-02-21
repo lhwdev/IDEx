@@ -1,257 +1,40 @@
 package com.idex.ui.components
 
-import androidx.compose.foundation.AmbientIndication
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.takeOrElse
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.material.Colors
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
+import androidx.compose.material.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 
 
 object IdexTheme {
-	val colors
+	val colors: Colors
 		@Composable
-		@ComposableContract(readonly = true)
-		get() = AmbientColorsTheme.current
+		@ReadOnlyComposable
+		get() = MaterialTheme.colors
 	
-	val typography
+	val typography: Typography
 		@Composable
-		@ComposableContract(readonly = true)
-		get() = AmbientTypography.current
+		@ReadOnlyComposable
+		get() = MaterialTheme.typography
+	
+	val shapes: Shapes
+		@Composable
+		@ReadOnlyComposable
+		get() = MaterialTheme.shapes
 }
+
 
 @Composable
-fun IdexTheme(colors: Colors, typography: Typography, content: @Composable () -> Unit) {
-	Providers(
-		AmbientColorsTheme provides colors,
-		AmbientTypography provides typography,
-		AmbientIndication provides IdexIndication,
-		content = content
-	)
-}
-
-
-/// Colors
-
-@Immutable
-data class Colors(
-	val primary: Color,
-	val primaryVariant: Color,
-	val onPrimary: Color,
-	
-	val secondary: Color,
-	val secondaryVariant: Color,
-	val onSecondary: Color,
-	
-	val background: Color,
-	val onBackground: Color,
-	
-	val surface: Color,
-	val onSurface: Color,
-	
-	val error: Color,
-	val onError: Color,
-	
-	val isLight: Boolean
-)
-
-
-fun Colors.contentColorFor(color: Color) = when(color) {
-	primary -> onPrimary
-	secondary -> onSecondary
-	background -> onBackground
-	surface -> onSurface
-	error -> onError
-	else -> Color.Unspecified
-}
-
-@Composable
-fun contentColorFor(color: Color) =
-	IdexTheme.colors.contentColorFor(color).takeOrElse { AmbientContentColor.current }
-
-private val AmbientColorsTheme = ambientOf<Colors>()
-
-
-/// Typography
-
-/**
- * Class holding typography definitions.
- *
- * @property h1 h1 is the largest headline, reserved for short, important text or numerals.
- * For headlines, you can choose an expressive font, such as a display, handwritten, or script
- * style. These unconventional font designs have details and intricacy that help attract the eye.
- * @property h2 h2 is the second largest headline, reserved for short, important text or numerals.
- * For headlines, you can choose an expressive font, such as a display, handwritten, or script
- * style. These unconventional font designs have details and intricacy that help attract the eye.
- * @property h3 h3 is the third largest headline, reserved for short, important text or numerals.
- * For headlines, you can choose an expressive font, such as a display, handwritten, or script
- * style. These unconventional font designs have details and intricacy that help attract the eye.
- * @property h4 h4 is the fourth largest headline, reserved for short, important text or numerals.
- * For headlines, you can choose an expressive font, such as a display, handwritten, or script
- * style. These unconventional font designs have details and intricacy that help attract the eye.
- * @property h5 h5 is the fifth largest headline, reserved for short, important text or numerals.
- * For headlines, you can choose an expressive font, such as a display, handwritten, or script
- * style. These unconventional font designs have details and intricacy that help attract the eye.
- * @property h6 h6 is the sixth largest headline, reserved for short, important text or numerals.
- * For headlines, you can choose an expressive font, such as a display, handwritten, or script
- * style. These unconventional font designs have details and intricacy that help attract the eye.
- * @property subtitle1 subtitle1 is the largest subtitle, and is typically reserved for
- * medium-emphasis text that is shorter in length. Serif or sans serif typefaces work well for
- * subtitles.
- * @property subtitle2 subtitle2 is the smallest subtitle, and is typically reserved for
- * medium-emphasis text that is shorter in length. Serif or sans serif typefaces work well for
- * subtitles.
- * @property body1 body1 is the largest body, and is typically used for long-form writing as it
- * works well for small text sizes. For longer sections of text, a serif or sans serif typeface
- * is recommended.
- * @property body2 body2 is the smallest body, and is typically used for long-form writing as it
- * works well for small text sizes. For longer sections of text, a serif or sans serif typeface
- * is recommended.
- * @property button button text is a call to action used in different types of buttons (such as
- * text, outlined and contained buttons) and in tabs, dialogs, and cards. Button text is
- * typically sans serif, using all caps text.
- * @property caption caption is one of the smallest font sizes. It is used sparingly to
- * annotate imagery or to introduce a headline.
- * @property overline overline is one of the smallest font sizes. It is used sparingly to
- * annotate imagery or to introduce a headline.
- */
-@Immutable
-data class Typography internal constructor(
-	val h1: TextStyle,
-	val h2: TextStyle,
-	val h3: TextStyle,
-	val h4: TextStyle,
-	val h5: TextStyle,
-	val h6: TextStyle,
-	val subtitle1: TextStyle,
-	val subtitle2: TextStyle,
-	val body1: TextStyle,
-	val body2: TextStyle,
-	val button: TextStyle,
-	val caption: TextStyle,
-	val overline: TextStyle
+fun IdexTheme(
+	colors: Colors = IdexTheme.colors,
+	typography: Typography = IdexTheme.typography,
+	shapes: Shapes = IdexTheme.shapes,
+	content: @Composable () -> Unit
 ) {
-	/**
-	 * Constructor to create a [Typography]. For information on the types of style defined in
-	 * this constructor, see the property documentation for [Typography].
-	 *
-	 * @param defaultFontFamily the default [FontFamily] to be used for [TextStyle]s provided in
-	 * this constructor. This default will be used if the [FontFamily] on the [TextStyle] is `null`.
-	 * @param h1 h1 is the largest headline, reserved for short, important text or numerals.
-	 * @param h2 h2 is the second largest headline, reserved for short, important text or numerals.
-	 * @param h3 h3 is the third largest headline, reserved for short, important text or numerals.
-	 * @param h4 h4 is the fourth largest headline, reserved for short, important text or numerals.
-	 * @param h5 h5 is the fifth largest headline, reserved for short, important text or numerals.
-	 * @param h6 h6 is the sixth largest headline, reserved for short, important text or numerals.
-	 * @param subtitle1 subtitle1 is the largest subtitle, and is typically reserved for
-	 * medium-emphasis text that is shorter in length.
-	 * @param subtitle2 subtitle2 is the smallest subtitle, and is typically reserved for
-	 * medium-emphasis text that is shorter in length.
-	 * @param body1 body1 is the largest body, and is typically used for long-form writing as it
-	 * works well for small text sizes.
-	 * @param body2 body2 is the smallest body, and is typically used for long-form writing as it
-	 * works well for small text sizes.
-	 * @param button button text is a call to action used in different types of buttons (such as
-	 * text, outlined and contained buttons) and in tabs, dialogs, and cards.
-	 * @param caption caption is one of the smallest font sizes. It is used sparingly to annotate
-	 * imagery or to introduce a headline.
-	 * @param overline overline is one of the smallest font sizes. It is used sparingly to annotate
-	 * imagery or to introduce a headline.
-	 */
-	constructor(
-		defaultFontFamily: FontFamily = FontFamily.Default,
-		h1: TextStyle = TextStyle(
-			fontWeight = FontWeight.Light,
-			fontSize = 96.sp,
-			letterSpacing = (-1.5).sp
-		),
-		h2: TextStyle = TextStyle(
-			fontWeight = FontWeight.Light,
-			fontSize = 60.sp,
-			letterSpacing = (-0.5).sp
-		),
-		h3: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 48.sp,
-			letterSpacing = 0.sp
-		),
-		h4: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 34.sp,
-			letterSpacing = 0.25.sp
-		),
-		h5: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 24.sp,
-			letterSpacing = 0.sp
-		),
-		h6: TextStyle = TextStyle(
-			fontWeight = FontWeight.Medium,
-			fontSize = 20.sp,
-			letterSpacing = 0.15.sp
-		),
-		subtitle1: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 16.sp,
-			letterSpacing = 0.15.sp
-		),
-		subtitle2: TextStyle = TextStyle(
-			fontWeight = FontWeight.Medium,
-			fontSize = 14.sp,
-			letterSpacing = 0.1.sp
-		),
-		body1: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 16.sp,
-			letterSpacing = 0.5.sp
-		),
-		body2: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 14.sp,
-			letterSpacing = 0.25.sp
-		),
-		button: TextStyle = TextStyle(
-			fontWeight = FontWeight.Medium,
-			fontSize = 14.sp,
-			letterSpacing = 1.25.sp
-		),
-		caption: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 12.sp,
-			letterSpacing = 0.4.sp
-		),
-		overline: TextStyle = TextStyle(
-			fontWeight = FontWeight.Normal,
-			fontSize = 10.sp,
-			letterSpacing = 1.5.sp
-		)
-	) : this(
-		h1 = h1.withDefaultFontFamily(defaultFontFamily),
-		h2 = h2.withDefaultFontFamily(defaultFontFamily),
-		h3 = h3.withDefaultFontFamily(defaultFontFamily),
-		h4 = h4.withDefaultFontFamily(defaultFontFamily),
-		h5 = h5.withDefaultFontFamily(defaultFontFamily),
-		h6 = h6.withDefaultFontFamily(defaultFontFamily),
-		subtitle1 = subtitle1.withDefaultFontFamily(defaultFontFamily),
-		subtitle2 = subtitle2.withDefaultFontFamily(defaultFontFamily),
-		body1 = body1.withDefaultFontFamily(defaultFontFamily),
-		body2 = body2.withDefaultFontFamily(defaultFontFamily),
-		button = button.withDefaultFontFamily(defaultFontFamily),
-		caption = caption.withDefaultFontFamily(defaultFontFamily),
-		overline = overline.withDefaultFontFamily(defaultFontFamily)
-	)
+	PlatformTheme(colors, typography, shapes, content)
 }
 
-/**
- * @return [this] if there is a [FontFamily] defined, otherwise copies [this] with [default] as
- * the [FontFamily].
- */
-private fun TextStyle.withDefaultFontFamily(default: FontFamily): TextStyle {
-	return if(fontFamily != null) this else copy(fontFamily = default)
-}
-
-private val AmbientTypography = staticAmbientOf { Typography() }
-
-
+@Composable
+expect fun PlatformTheme(colors: Colors, typography: Typography, shapes: Shapes, content: @Composable () -> Unit)

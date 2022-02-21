@@ -245,7 +245,7 @@ class DiffRowGenerator(
 	 */
 	private fun generateInlineDiffs(delta: Delta<String>): List<DiffRow> {
 		val orig = normalizeLines(delta.source.lines)
-		val rev = normalizeLines(delta.target.lines)
+		// val rev = normalizeLines(delta.target.lines)
 		
 		val joinedOrig = orig.joinToString("\n")
 		val joinedRev = orig.joinToString("\n")

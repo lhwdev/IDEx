@@ -1,24 +1,24 @@
 package com.idex.plugin
 
 import androidx.compose.runtime.*
-import com.idex.AmbientScope
+import com.idex.LocalScope
 
 
-private val sAmbientPlugin: ProvidableAmbient<Plugin?> = ambientOf { null }
+private val sLocalPlugin: ProvidableCompositionLocal<Plugin?> = compositionLocalOf { null }
 
 /**
- * This is exposed as [Ambient] type, not [ProvidableAmbient], as providing via AmbientPlugin does not also provide
- * [AmbientScope].
+ * This is exposed as [CompositionLocal] type, not [ProvidableCompositionLocal], as providing via LocalPlugin does not
+ * also provide [LocalScope].
  *
- * If you need, you can cast this [AmbientPlugin] into `ProvidableAmbient<Plugin?>`.
+ * If you need, you can cast this [LocalPlugin] into `ProvidableCompositionLocal<Plugin?>`.
  */
-val AmbientPlugin: Ambient<Plugin?> = sAmbientPlugin
+public val LocalPlugin: CompositionLocal<Plugin?> = sLocalPlugin
 
 @Composable
-fun ProvidePlugin(plugin: Plugin, content: @Composable () -> Unit) {
-	Providers(
-		AmbientScope provides plugin,
-		sAmbientPlugin provides plugin,
+public fun ProvidePlugin(plugin: Plugin, content: @Composable () -> Unit) {
+	CompositionLocalProvider(
+		LocalScope provides plugin,
+		sLocalPlugin provides plugin,
 		content = content
 	)
 }

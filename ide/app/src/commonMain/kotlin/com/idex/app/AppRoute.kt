@@ -9,6 +9,7 @@ class AppRouteId : RouteId
 
 
 data class AppRoute(override val id: AppRouteId, val content: @Composable () -> Unit) : ComposableRoute<AppRouteId> {
+	@Composable
 	override fun content() {
 		content.invoke()
 	}

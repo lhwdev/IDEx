@@ -1,7 +1,7 @@
 package com.idex.build
 
 
-const val kotlinVersion = "1.4.30" // also in root build.gradle.kts
+const val kotlinVersion = "1.4.32" // also in root build.gradle.kts
 
 const val coroutineVersion = "1.4.2"
 const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"

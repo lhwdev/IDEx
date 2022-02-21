@@ -1,3 +1,5 @@
+@file:JvmName("TextUtilsJvm")
+
 package com.idex.text
 
 

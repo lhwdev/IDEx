@@ -7,6 +7,6 @@ import com.idex.ScopeInfo
 /**
  * A class which contains information about a plugin.
  */
-class Plugin(val config: PluginConfig) : Scope {
+public class Plugin(public val config: PluginConfig) : Scope {
 	override val scopeInfo: ScopeInfo = ScopeInfo(config.name)
 }

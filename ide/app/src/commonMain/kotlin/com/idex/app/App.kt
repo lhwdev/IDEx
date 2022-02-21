@@ -12,7 +12,7 @@ import com.idex.ui.navigation.pushRoute
 fun App() {
 	AppTheme {
 		val navigationState = remember {
-			val state = NavigationState()
+			val state = NavigationState(EntryPointRoute)
 			state.pushRoute(EntryPointRoute)
 			state
 		}

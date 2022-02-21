@@ -1,4 +1,4 @@
-package com.idex.ui
+package com.idex.ui.desktop.window
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -54,7 +54,15 @@ fun ComposableWindow(
 	initWindow: ((DesktopAppWindow) -> Unit)? = null,
 	content: @Composable () -> Unit
 ) {
-	ComposableWindowInternal(info, undecorated, resizable, events, onDismissRequest, initWindow, content)
+	ComposableWindowInternal(
+		info,
+		undecorated,
+		resizable,
+		events,
+		onDismissRequest,
+		initWindow,
+		content
+	)
 }
 
 

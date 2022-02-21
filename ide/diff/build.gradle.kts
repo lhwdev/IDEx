@@ -24,4 +24,8 @@ kotlin {
 		implementation(serializationJson)
 		implementation(io)
 	}
+	
+	dependencies("jvmMain") {
+		implementation("io.github.mrasterisco:SortedList:1.2.0")
+	}
 }

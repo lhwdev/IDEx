@@ -7,10 +7,6 @@ plugins {
 	id("common-plugin")
 }
 
-repositories {
-	maven("https://dl.bintray.com/mrasterisco/Maven")
-}
-
 kotlin {
 	idexLibrary()
 	
@@ -24,5 +20,9 @@ kotlin {
 		implementation(serializationCore)
 		implementation(serializationJson)
 		implementation(io)
+	}
+	
+	dependencies("jvmMain") {
+		implementation("io.github.mrasterisco:SortedList:1.2.0")
 	}
 }

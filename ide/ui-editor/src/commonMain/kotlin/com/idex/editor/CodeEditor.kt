@@ -14,9 +14,9 @@ fun rememberCodeEditor(): CodeEditor {
 
 
 @Stable
-class CodeEditor(val a: Int) : @Composable () -> Unit {
+class CodeEditor(val a: Int) {
 	@Composable
-	override operator fun invoke() {
-	
+	operator fun invoke() {
+		
 	}
 }

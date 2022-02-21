@@ -1,10 +1,10 @@
 package com.idex.app
 
+import androidx.compose.material.Colors
+import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.idex.ui.components.Colors
 import com.idex.ui.components.IdexTheme
-import com.idex.ui.components.Typography
 
 
 @Composable
